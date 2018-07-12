@@ -2,6 +2,7 @@ use std::fs::{DirEntry};
 use std::path::Path;
 use std::env;
 
+extern crate stain;
 
 fn main() {
 
@@ -11,13 +12,7 @@ fn main() {
     if arg1.is_some() {
         let p = &arg1.unwrap();
         let dir = Path::new(p);
-        let go_folders = Vec::new();
-        collect_go_folders(dir, go_folders);
+        stain::coverage::go::measure(dir);
         println!("dir={:?}", dir);
     }
-}
-
-//TODO separate lib for go-coverage
-fn collect_go_folders(path: &Path, go_folders: Vec<&Path>) {
-
 }
