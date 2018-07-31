@@ -1,13 +1,34 @@
 use std::path::PathBuf;
 use std::fs;
 use std::io;
+use std::process::Command;
 
-pub fn measure(path: PathBuf) -> io::Result<Vec<PathBuf>> {
-    let go_folders = collect_go_module_folders(path);
-    return go_folders;
+#[derive(Debug)]
+pub struct Coverage {
+    pub module: PathBuf
 }
 
-fn collect_go_module_folders(path: PathBuf) -> io::Result<Vec<PathBuf>> {
+pub fn measure(path: PathBuf) -> io::Result<Vec<Coverage>> {
+    let go_folders = collect_go_module_folders(path);
+    return Ok(collect_coverage(go_folders?));
+}
+
+fn collect_coverage(paths: Vec<PathBuf>) -> Vec<Coverage>{
+    println!("### collect coverage");
+    let mut coverage_result = Vec::new();
+    for path in paths {
+        println!("### coverage for path {:?}", path);
+        let result = Command::new("go").current_dir(&path).arg("test").arg("-cover").output();
+        coverage_result.push(Coverage{
+            module: path.to_path_buf()
+        });
+
+        println!("#### output {:?}", result);
+    }
+    return coverage_result;
+}
+
+pub fn collect_go_module_folders(path: PathBuf) -> io::Result<Vec<PathBuf>> {
 
     let mut result = Vec::new();
     let mut append_self = false;
