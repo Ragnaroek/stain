@@ -46,6 +46,6 @@ pub fn collect_go_module_folders(path: PathBuf) -> io::Result<Vec<PathBuf>> {
     if append_self {
         result.push(path);
     }
-
+    result.sort();
     return Ok(result);
 }

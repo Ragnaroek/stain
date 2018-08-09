@@ -9,9 +9,10 @@ pub fn test_collect_go_module_folders() {
     let result = go::collect_go_module_folders(dir.to_path_buf()).unwrap();
     assert_eq!(result, vec![
         PathBuf::from("tests/testdata/go/top1"),
-        PathBuf::from("tests/testdata/go/top2/top22"),
+        PathBuf::from("tests/testdata/go/top2/top21"),
         PathBuf::from("tests/testdata/go/top2/top21/top211"),
-        PathBuf::from("tests/testdata/go/top2/top21")
+        PathBuf::from("tests/testdata/go/top2/top22"),
+        PathBuf::from("tests/testdata/go/top3_no_test"),
     ]);
 }
 

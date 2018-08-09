@@ -11,7 +11,7 @@ fn main() {
     if arg1.is_some() {
         let p = &arg1.unwrap();
         let dir = Path::new(p);
-        stain::coverage::go::measure(dir.to_path_buf());
-        println!("dir={:?}", dir);
+        let coverage_result = stain::coverage::go::measure(dir.to_path_buf());
+        println!("result={:?}", coverage_result);
     }
 }
