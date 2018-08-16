@@ -2,8 +2,10 @@ use std::path::Path;
 use std::env;
 
 extern crate stain;
+extern crate env_logger;
 
 fn main() {
+    env_logger::init();
 
     let mut args = env::args();
     args.next();

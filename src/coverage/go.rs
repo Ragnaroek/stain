@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 use std::fs;
 use std::io;
+use std::io::Read;
 use std::process::Command;
 
 #[derive(Debug)]
@@ -18,12 +19,23 @@ fn collect_coverage(paths: Vec<PathBuf>) -> Vec<Coverage>{
     let mut coverage_result = Vec::new();
     for path in paths {
         println!("### coverage for path {:?}", path);
-        let result = Command::new("go").current_dir(&path).arg("test").arg("-cover").output();
+        let result = Command::new("go").current_dir(&path)
+        .arg("test").arg("-cover").arg("-coverprofile=coverage.out").arg("-covermode=atomic").output();
         coverage_result.push(Coverage{
             module: path.to_path_buf()
         });
 
-        println!("#### output {:?}", result);
+        let mut coverage_out_path = path.clone();
+        coverage_out_path.push("coverage.out");
+
+        let coverage_file = fs::File::open(coverage_out_path);
+        if coverage_file.is_ok() {
+            let mut file_content = String::new();
+            coverage_file.unwrap().read_to_string(&mut file_content);
+            println!("### coverage {:?}", file_content);
+        } else {
+            error!("reading coverage file for package {:?} failed: {:?}", path, coverage_file);
+        }
     }
     return coverage_result;
 }
